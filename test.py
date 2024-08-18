@@ -62,14 +62,14 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
     differences = []
 
     #Vergleich Nukleotide
-    for i in range(len(dna_sequence_1)):
-        if dna_sequence_1[i] != dna_sequence_2[i]:
-            differences.append((i,dna_sequence_1[i], dna_sequence_2[i]))
+    for nucleotide in range(len(dna_sequence_1)):
+        if dna_sequence_1[nucleotide] != dna_sequence_2[nucleotide]:
+            differences.append((nucleotide,dna_sequence_1[nucleotide], dna_sequence_2[nucleotide]))
 
-    if differences:
-        return f"Es gibt {len(differences)} Unterschiede"
-    else:
-        return "DNA Sequenzen sind identisch."
+        if differences:
+            return f"Es gibt {len(differences)} Unterschiede:\n" + "\n".join([f"Position {pos}: {nuc1} -> {nuc2}" for pos, nuc1, nuc2 in differences])
+        else:
+            return "DNA Sequenzen sind identisch."
 
 print(f"{dna_sequence_1}")
 
