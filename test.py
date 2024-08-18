@@ -1,6 +1,7 @@
 #Test
 #Definieren der Nukleotide
-from colorama import Fore, Back, Style, init
+#snakify
+#from colorama import Fore, Back, Style, init
 
 def count_nucleotides(dna_sequence_1):
     g_seq = 0
@@ -53,7 +54,22 @@ if dna_sequence_1 == dna_sequence_2:
     print("Keine Mutation")
 else:
     print("Mutation vorhanden") 
-     #print(Fore.RED + "Mutation vorhanden"  + Style.RESET_ALL) text sollte rot sein, funktioniert nicht??
+    #print(Fore.RED + 'Mutation vorhanden'  + Style.RESET_ALL)
+
+def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
+     
+    #start einer liste
+    differences = []
+
+    #Vergleich Nukleotide
+    for i in range(len(dna_sequence_1)):
+        if dna_sequence_1[i] != dna_sequence_2[i]:
+            differences.append((i,dna_sequence_1[i], dna_sequence_2[i]))
+
+    if differences:
+        return f"Es gibt {len(differences)} Unterschiede"
+    else:
+        return "DNA Sequenzen sind identisch."
 
 print(f"{dna_sequence_1}")
 
