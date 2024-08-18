@@ -42,7 +42,7 @@ def count_nucleotides(dna_sequence_2):
 
 # Beispiel DNA-Sequenz
 dna_sequence_1 = "CGTGCATGCGTGATGATATTGCGTCGATGAC"
-dna_sequence_2 = "CGTGCATGCGTGATGATATTGCGTCGATGAA"
+dna_sequence_2 = "CGTGCATGCGTGATGATATTGCGTCGATGCA"
 g_seq, t_seq, a_seq, c_seq = count_nucleotides(dna_sequence_1)
 g_seq_2, t_seq_2, a_seq_2, c_seq_2 = count_nucleotides(dna_sequence_2)
 
@@ -66,10 +66,13 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
         if dna_sequence_1[nucleotide] != dna_sequence_2[nucleotide]:
             differences.append((nucleotide,dna_sequence_1[nucleotide], dna_sequence_2[nucleotide]))
 
-        if differences:
-            return f"Es gibt {len(differences)} Unterschiede:\n" + "\n".join([f"Position {pos}: {nuc1} -> {nuc2}" for pos, nuc1, nuc2 in differences])
-        else:
-            return "DNA Sequenzen sind identisch."
+    if differences:
+        return f"Es gibt {len(differences)} Unterschiede:\n" + "\n".join([f"Position {pos}: {nuc1} -> {nuc2}" for pos, nuc1, nuc2 in differences])
+    else:
+        return "DNA Sequenzen sind identisch."
+        
+result = compare_dna_sequences(dna_sequence_1, dna_sequence_2)
+
 
 print(f"{dna_sequence_1}")
 
@@ -84,3 +87,5 @@ print(f"G: {g_seq_2}")
 print(f"T: {t_seq_2}")
 print(f"A: {a_seq_2}")
 print(f"C: {c_seq_2}")
+
+print(result)
