@@ -74,6 +74,7 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
 result = compare_dna_sequences(dna_sequence_1, dna_sequence_2)
 
 
+
 print(f"{dna_sequence_1}")
 
 print(f"G: {g_seq}")
@@ -89,3 +90,14 @@ print(f"A: {a_seq_2}")
 print(f"C: {c_seq_2}")
 
 print(result)
+
+with open ("sequence1.txt", "r") as f:
+
+    size_to_read = 10
+
+    f_contents = f.read(size_to_read)
+
+    while len(f_contents) > 0:
+        print(f_contents, end="")
+        f_contents = f.read(size_to_read)
+    
