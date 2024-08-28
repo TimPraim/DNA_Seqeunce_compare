@@ -2,7 +2,6 @@
 #Definieren der Nukleotide
 #snakify
 #from colorama import Fore, Back, Style, init
-
 from msilib import sequence
 
 
@@ -43,17 +42,25 @@ def count_nucleotides(dna_sequence_2):
 
     return g_seq_2, t_seq_2, a_seq_2, c_seq_2
 
-def read_dna_file(file_path):    
+
+
+def read_dna_file1(file_path):
     with open ("sequence1.txt", "r") as f:
         sequence = f.read().strip()
     return sequence
+#öffnet die erste Datei und liest sie, lässt dabei Leerzeichen weg.
+def read_dna_file2(file_path):    
+    with open ("sequence2.txt", "r") as f:
+        sequence = f.read().strip()
+    return sequence
+#öffnet die zweite Datei und liest sie, lässt dabei Leerzeichen weg.
 
 file1 = "sequence1.txt"
 file2 = "sequence2.txt"
 
 # Beispiel DNA-Sequenz
-dna_sequence_1 = read_dna_file(file1)
-dna_sequence_2 = read_dna_file(file2)
+dna_sequence_1 = read_dna_file1(file1)
+dna_sequence_2 = read_dna_file2(file2)
 g_seq, t_seq, a_seq, c_seq = count_nucleotides(dna_sequence_1)
 g_seq_2, t_seq_2, a_seq_2, c_seq_2 = count_nucleotides(dna_sequence_2)
 
@@ -103,13 +110,10 @@ print(f"C: {c_seq_2}")
 
 print(result)
 
-with open ("sequence1.txt", "r") as f:
-
-    size_to_read = 10
-
-    f_contents = f.read(size_to_read)
-
-    while len(f_contents) > 0:
-        print(f_contents, end="")
-        f_contents = f.read(size_to_read)
+#with open ("sequence1.txt", "r") as f:
+    #size_to_read = 10
+    #f_contents = f.read(size_to_read)
+    #while len(f_contents) > 0:
+        #print(f_contents, end="")
+        #f_contents = f.read(size_to_read)
     
