@@ -3,6 +3,9 @@
 #snakify
 #from colorama import Fore, Back, Style, init
 
+from msilib import sequence
+
+
 def count_nucleotides(dna_sequence_1):
     g_seq = 0
     t_seq = 0
@@ -40,16 +43,25 @@ def count_nucleotides(dna_sequence_2):
 
     return g_seq_2, t_seq_2, a_seq_2, c_seq_2
 
+def read_dna_file(file_path):    
+    with open ("sequence1.txt", "r") as f:
+        sequence = f.read().strip()
+    return sequence
+
+file1 = "sequence1.txt"
+file2 = "sequence2.txt"
+
 # Beispiel DNA-Sequenz
-dna_sequence_1 = "CGTGCATGCGTGATGATATTGCGTCGATGAC"
-dna_sequence_2 = "CGTGCATGCGTGATGATATTGCGTCGATGCA"
+dna_sequence_1 = read_dna_file(file1)
+dna_sequence_2 = read_dna_file(file2)
 g_seq, t_seq, a_seq, c_seq = count_nucleotides(dna_sequence_1)
 g_seq_2, t_seq_2, a_seq_2, c_seq_2 = count_nucleotides(dna_sequence_2)
 
 #vergleichen der Länge beider Sequenzen
-if len(dna_sequence_1) != len(dna_sequence_2):
-    raise ValueError("Sequenzen muessen gleich lang sein.")
+#if len(dna_sequence_1) != len(dna_sequence_2):
+    #raise ValueError("Sequenzen muessen gleich lang sein.")
 #falls unterschied in Sequenz -> Mutation
+
 if dna_sequence_1 == dna_sequence_2:
     print("Keine Mutation")
 else:
