@@ -3,6 +3,8 @@
 #snakify
 #from colorama import Fore, Back, Style, init
 from msilib import sequence
+from Bio import SeqIO
+
 
 
 def count_nucleotides(dna_sequence_1):
