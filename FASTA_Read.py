@@ -21,7 +21,10 @@ def count_nucleotides(dna_sequence_1):
         elif nucleotide == 'C':
             c_seq += 1
 
-    return g_seq, t_seq, a_seq, c_seq
+    total_nucleotides = g_seq + t_seq + a_seq + c_seq
+    
+    return g_seq, t_seq, a_seq, c_seq, total_nucleotides
+
 
 
 
@@ -29,7 +32,7 @@ def count_nucleotides(dna_sequence_1):
 with open(fasta_file, "r") as file:
     for record in SeqIO.parse(file, "fasta"):
         # Zähle die Nukleotide in der aktuellen Sequenz
-        g_seq, t_seq, a_seq, c_seq = count_nucleotides(str(record.seq))
+        g_seq, t_seq, a_seq, c_seq, total_nucleotides = count_nucleotides(str(record.seq))
 
         # Ergebnisse für die aktuelle Sequenz ausgeben
         print(f"Sequenz-ID: {record.id}")
@@ -37,4 +40,10 @@ with open(fasta_file, "r") as file:
         print(f"Anzahl von T: {t_seq}")
         print(f"Anzahl von C: {c_seq}")
         print(f"Anzahl von G: {g_seq}")
+        print(f"Total: {total_nucleotides} ")
         print("----------")
+
+
+#Damit die Sequenzen korrekt miteinander verglichen werden muss in Abschnitten gearbeitet werden. Eine Insertion oder Delition kann zu einer kompletten Verschiebung des Codes führen. 
+#Die Frage ist jetzt wie soll die Ausgabe sein, dass sie 1. nicht zu lang ist und 2. dass man versteht wo die Unterschiede liege und was diese aussagen
+
