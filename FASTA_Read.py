@@ -1,6 +1,6 @@
 import sys
 from Bio import SeqIO
-
+#test
 fasta_file = "gene.fna" #Pfad zur FASTA Datei
 
 
