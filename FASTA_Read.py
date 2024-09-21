@@ -1,6 +1,6 @@
 import sys
 from Bio import SeqIO
-#test
+#test 1
 fasta_file = "gene.fna" #Pfad zur FASTA Datei
 
 
@@ -46,4 +46,4 @@ with open(fasta_file, "r") as file:
 
 #Damit die Sequenzen korrekt miteinander verglichen werden muss in Abschnitten gearbeitet werden. Eine Insertion oder Delition kann zu einer kompletten Verschiebung des Codes führen. 
 #Die Frage ist jetzt wie soll die Ausgabe sein, dass sie 1. nicht zu lang ist und 2. dass man versteht wo die Unterschiede liege und was diese aussagen
-
+#Eine Idee wäre es nicht die Unterscheide, sondern die Gemeinsamkeiten zu finden, um zu wissen wo die Mutation ähnlich sind und was sie ausmachen
