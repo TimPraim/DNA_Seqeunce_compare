@@ -26,19 +26,53 @@ def count_nucleotides(dna_sequence_1):
     return g_seq, t_seq, a_seq, c_seq, total_nucleotides
 
 def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
-    min_length = min(len(dna_sequence_1), len(dna_sequence_2))
+    i, j = 0, 0 #Braucht zwei Variablen wegen Deletion
     differences = []
-    #sucht sich die kürzere Sequenz
+    #i und j erhöht sich bei jedem Durchgang um 1
+    while i < len(dna_sequence_1) and j < len(dna_sequence_2): 
+    #while schleife, solange es in der Grenze beider Sequenzen liegt, wenn Länge überschritten Schliefe hört auf
+        if dna_sequence_1[i] != dna_sequence_2[j]:
+            #überprüfen auf deletion
+            mismatch_count = 0
+            first_mismatch_index = i
+            
+            for k in range(4):
+                if i + k < len(dna_sequence_1) and j + k < len(dna_sequence_2):
+                    if dna_sequence_1[i + k] != dna_sequence_2[j+ k]:
+                        mismatch_count += 1
+                else:
+                    break
+                    
+            #wenn mehr als 20 Fehler gefunden --> Deletion vermutet   
+            if mismatch_count > 2:
+                differences.append(f"Vermutete Deletion zwischen Position {first_mismatch_index + 1} und {first_mismatch_index + mismatch_count}")
+                
+                #verschiebe die zweite Sequenz nach rechts um Überinstimmung zu erreicne
+                while j < len(dna_sequence_2) and mismatch_count > 2:
+                    j += 1 #verschiebe j nach rechts
+                    mismatch_count = 0
 
-    #vergleicht Sequenzen bis zu Länge der kürzeren Sequenz
-    #i erhöht sich bei jedem Durchgang um 1
-    for i in range(min_length):
-        if dna_sequence_1[i] != dna_sequence_2[i]:
-            differences.append(f"Unterschied an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[i]}")
+                    # Überprüfe erneut die Mismatches in den nächsten 40 Nukleotiden
+                    for k in range(4):
+                        if i + k < len(dna_sequence_1) and j + k < len(dna_sequence_2):
+                            if dna_sequence_1[i + k] != dna_sequence_2[j + k]:
+                                mismatch_count += 1
+                        else:
+                            break
+
+            continue
+
+        #wenn Zeichen überinstimmen, einfach weiter
+        else: 
+            i += 1
+            j += 1
+    
     if differences:
         return "\n".join(differences)
     else:
         return "Keine Unterschiede gefunden."
+    
+
 sequences_1 = []
 sequences_2 = []
 
