@@ -32,6 +32,7 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
     while i < len(dna_sequence_1) and j < len(dna_sequence_2): 
     #while schleife, solange es in der Grenze beider Sequenzen liegt, wenn Länge überschritten Schliefe hört auf
         if dna_sequence_1[i] != dna_sequence_2[j]:
+
             #überprüfen auf deletion
             mismatch_count = 0
             first_mismatch_index = i
@@ -52,14 +53,18 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
                     j += 1 #verschiebe j nach rechts
                     mismatch_count = 0
 
-                    # Überprüfe erneut die Mismatches in den nächsten 40 Nukleotiden
+                    # Überprüfe erneut die Mismatches in den nächsten 4 Nukleotiden
                     for k in range(4):
                         if i + k < len(dna_sequence_1) and j + k < len(dna_sequence_2):
                             if dna_sequence_1[i + k] != dna_sequence_2[j + k]:
                                 mismatch_count += 1
                         else:
                             break
-
+            elif mismatch_count <= 2:
+                differences.append(f"Substitution an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[j]}")
+                # Verschiebe die Indizes normal weiter
+                i += 1
+                j += 1       
             continue
 
         #wenn Zeichen überinstimmen, einfach weiter
@@ -119,9 +124,3 @@ with open(fasta_file2, "r") as file:
 # Vergleiche die beiden Sequenzen
 result = compare_dna_sequences(sequences_1[0], sequences_2[0])
 print(result)
-
-
-#Notizen:
-#Damit die Sequenzen korrekt miteinander verglichen werden muss in Abschnitten gearbeitet werden. Eine Insertion oder Delition kann zu einer kompletten Verschiebung des Codes führen. 
-#Die Frage ist jetzt wie soll die Ausgabe sein, dass sie 1. nicht zu lang ist und 2. dass man versteht wo die Unterschiede liege und was diese aussagen
-#Eine Idee wäre es nicht die Unterscheide, sondern die Gemeinsamkeiten zu finden, um zu wissen wo die Mutation ähnlich sind und was sie ausmachen
