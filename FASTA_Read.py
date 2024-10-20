@@ -25,6 +25,39 @@ def count_nucleotides(dna_sequence_1):
     
     return g_seq, t_seq, a_seq, c_seq, total_nucleotides
 
+def compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, start_index_1, start_index_2, part_length):
+    #Diese Funktion vergleicht gleich (part_length) lange Teile von 2 Sequenzen, angefagen von den jeweils angegeben start_index_1 bzw. start_index_2. Zurückgegeben wird die Anzahl Unterschiede.
+    mismatch_count = 0
+    for k in range(part_length):
+        if start_index_1 + k < len(dna_sequence_1) and start_index_2 + k < len(dna_sequence_2):
+            if dna_sequence_1[start_index_1 + k] != dna_sequence_2[start_index_2 + k]:
+                mismatch_count += 1
+    return mismatch_count
+
+def compare_next_nucleotides(dna_sequence_1, dna_sequence_2, i, j):
+    #vergleicht die nächsten nukleotide ab position i in der ersten sequenz mit den nächsten nukleotide von j
+
+       #berechne die Endindizes für den Vergleich
+    end_index_1 = i + 20
+
+    #schleife, um j so lange zu erhöhen, bis die nächsten 10 Nukleotide übereinstimmen
+    while j < len(dna_sequence_2):
+        end_index_2 = j + 20
+
+        #überprüfe, ob die Indizes innerhalb der Grenzen liegen
+        if end_index_1 <= len(dna_sequence_1) and end_index_2 <= len(dna_sequence_2):
+        # Vergleiche die nächsten 10 Nukleotide
+            if dna_sequence_1[i:end_index_1] == dna_sequence_2[j:end_index_2]:
+                j += 1  # Wenn sie übereinstimmen, j um 1 erhöhen
+            else:
+                # Wenn sie nicht übereinstimmen, j um 2 erhöhen
+                j += 2
+        else:
+            # Falls die Grenzen überschritten werden, erhöhen wir einfach j um 2, um Fehler zu vermeiden
+            j += 2
+
+    return i, j  # Rückgabe der neuen Indizes
+
 def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
     i, j = 0, 0 #Braucht zwei Variablen wegen Deletion
     differences = []
@@ -32,41 +65,23 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
     while i < len(dna_sequence_1) and j < len(dna_sequence_2): 
     #while schleife, solange es in der Grenze beider Sequenzen liegt, wenn Länge überschritten Schliefe hört auf
         if dna_sequence_1[i] != dna_sequence_2[j]:
-
+            mismatch_count = compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i, j, 6)
             #überprüfen auf deletion
-            mismatch_count = 0
-            first_mismatch_index = i
-            
-            for k in range(4):
-                if i + k < len(dna_sequence_1) and j + k < len(dna_sequence_2):
-                    if dna_sequence_1[i + k] != dna_sequence_2[j+ k]:
-                        mismatch_count += 1
-                else:
-                    break
-                    
-            #wenn mehr als 20 Fehler gefunden --> Deletion vermutet   
-            if mismatch_count > 2:
-                differences.append(f"Vermutete Deletion zwischen Position {first_mismatch_index + 1} und {first_mismatch_index + mismatch_count}")
-                
-                #verschiebe die zweite Sequenz nach rechts um Überinstimmung zu erreicne
-                while j < len(dna_sequence_2) and mismatch_count > 2:
-                    j += 1 #verschiebe j nach rechts
-                    mismatch_count = 0
 
-                    # Überprüfe erneut die Mismatches in den nächsten 4 Nukleotiden
-                    for k in range(4):
-                        if i + k < len(dna_sequence_1) and j + k < len(dna_sequence_2):
-                            if dna_sequence_1[i + k] != dna_sequence_2[j + k]:
-                                mismatch_count += 1
-                        else:
-                            break
-            elif mismatch_count <= 2:
+            #ueberprüfen auf Deletion
+            if mismatch_count > 2:  # Deletion vermutet
+                differences.append(f"Vermutete Deletion zwischen Position {i + 1} und {i + mismatch_count}")
+                
+                #verschiebe die zweite Sequenz nach rechts, um eine Übereinstimmung zu finden
+                i, j = compare_next_nucleotides(dna_sequence_1, dna_sequence_2, i, j)
+                
+                continue
+            else:
+                #substitution statt deletion
                 differences.append(f"Substitution an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[j]}")
-                # Verschiebe die Indizes normal weiter
+                # Verschiebe die Indixes normal weiter
                 i += 1
                 j += 1       
-            continue
-
         #wenn Zeichen überinstimmen, einfach weiter
         else: 
             i += 1
