@@ -68,7 +68,7 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
             mismatch_count = compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i, j, 6)
             #überprüfen auf deletion
 
-            #arrays für Mismatch-Zählungen
+            #listen für Mismatch-Zählungen
             mismatch_count_i = [compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i + k, j, 10) for k in range(6)]
             mismatch_count_j = [compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i, j + k, 10) for k in range(6)]
 
