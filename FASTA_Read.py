@@ -26,7 +26,7 @@ def count_nucleotides(dna_sequence_1):
     return g_seq, t_seq, a_seq, c_seq, total_nucleotides
 
 def compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, start_index_1, start_index_2, part_length):
-    #Diese Funktion vergleicht gleich (part_length) lange Teile von 2 Sequenzen, angefagen von den jeweils angegeben start_index_1 bzw. start_index_2. Zurückgegeben wird die Anzahl Unterschiede.
+    #diese Funktion vergleicht gleich (part_length) lange Teile von 2 Sequenzen, angefagen von den jeweils angegeben start_index_1 bzw. start_index_2. Zurückgegeben wird die Anzahl Unterschiede.
     mismatch_count = 0
     for k in range(part_length):
         if start_index_1 + k < len(dna_sequence_1) and start_index_2 + k < len(dna_sequence_2):
@@ -46,14 +46,14 @@ def compare_next_nucleotides(dna_sequence_1, dna_sequence_2, i, j):
 
         #überprüfe, ob die Indizes innerhalb der Grenzen liegen
         if end_index_1 <= len(dna_sequence_1) and end_index_2 <= len(dna_sequence_2):
-        # Vergleiche die nächsten 10 Nukleotide
+        #vergleiche die nächsten 10 Nukleotide
             if dna_sequence_1[i:end_index_1] == dna_sequence_2[j:end_index_2]:
-                j += 1  # Wenn sie übereinstimmen, j um 1 erhöhen
+                return i, j + 1  #wenn sie übereinstimmen, j um 1 erhöhen
             else:
-                # Wenn sie nicht übereinstimmen, j um 2 erhöhen
+                #wenn sie nicht übereinstimmen, j um 2 erhöhen
                 j += 2
         else:
-            # Falls die Grenzen überschritten werden, erhöhen wir einfach j um 2, um Fehler zu vermeiden
+            #falls die Grenzen überschritten werden, erhöhen wir einfach j um 2, um Fehler zu vermeiden
             j += 2
 
     return i, j  # Rückgabe der neuen Indizes
@@ -68,25 +68,36 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
             mismatch_count = compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i, j, 6)
             #überprüfen auf deletion
 
-            #ueberprüfen auf Deletion
-            if mismatch_count > 2:  # Deletion vermutet
-                differences.append(f"Vermutete Deletion zwischen Position {i + 1} und {i + mismatch_count}")
-                
-                #verschiebe die zweite Sequenz nach rechts, um eine Übereinstimmung zu finden
-                i, j = compare_next_nucleotides(dna_sequence_1, dna_sequence_2, i, j)
-                
-                continue
+            #arrays für Mismatch-Zählungen
+            mismatch_count_i = [compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i + k, j, 10) for k in range(6)]
+            mismatch_count_j = [compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, i, j + k, 10) for k in range(6)]
+
+            #suche nach dem ersten k, bei dem mismatch_count_i oder mismatch_count_j 0 ist
+            for k in range(6):
+                if mismatch_count_i[k] == 0 or mismatch_count_j[k] == 0:
+                    if mismatch_count_i[k] == 0:
+                        #verschiebe i um k, wenn i verschoben werden kann
+                        differences.append(f"Deletion an Position {i + 1}: {dna_sequence_1[i]} -> _")  #melde die Deletion
+                        i += k  #i wird aktualisiert
+                    if mismatch_count_j[k] == 0:
+                        #verschiebe j um k, wenn j verschoben werden kann
+                        j += k
+                    break
             else:
-                #substitution statt deletion
+                #wenn keine 0 in den mismatch_counts gefunden wurden, es könnte eine Substitution sein
                 differences.append(f"Substitution an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[j]}")
-                # Verschiebe die Indixes normal weiter
                 i += 1
-                j += 1       
-        #wenn Zeichen überinstimmen, einfach weiter
-        else: 
+                j += 1
+        else:
+            #wenn Nukleotide übereinstimmen, einfach weiter
             i += 1
             j += 1
-    
+
+    #überprüfen, ob noch Unterschiede in der Referenzsequenz vorhanden sind
+    while i < len(dna_sequence_1):
+        differences.append(f"Zusätzliche Base in der Referenzsequenz an Position {i + 1}: {dna_sequence_1[i]} fehlt in der mutierten Sequenz.")
+        i += 1
+
     if differences:
         return "\n".join(differences)
     else:
