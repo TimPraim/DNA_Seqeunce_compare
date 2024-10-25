@@ -56,11 +56,17 @@ def compare_next_nucleotides(dna_sequence_1, dna_sequence_2, i, j):
             #falls die Grenzen überschritten werden, erhöhen wir einfach j um 2, um Fehler zu vermeiden
             j += 2
 
-    return i, j  # Rückgabe der neuen Indizes
+    return i, j  #rückgabe der neuen Indizes
 
 def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
     i, j = 0, 0 #Braucht zwei Variablen wegen Deletion
     differences = []
+    #dictionary zur Speicherung pathogener Mutationen
+    pathogen_mutations = {
+        76190: ("Substitution", "G", "A"),
+        121388: ("Deletion", "C", "_"),
+    }
+
     #i und j erhöht sich bei jedem Durchgang um 1
     while i < len(dna_sequence_1) and j < len(dna_sequence_2): 
     #while schleife, solange es in der Grenze beider Sequenzen liegt, wenn Länge überschritten Schliefe hört auf
@@ -76,16 +82,21 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
             for k in range(6):
                 if mismatch_count_i[k] == 0 or mismatch_count_j[k] == 0:
                     if mismatch_count_i[k] == 0:
-                        #verschiebe i um k, wenn i verschoben werden kann
-                        differences.append(f"Deletion an Position {i + 1}: {dna_sequence_1[i]} -> _")  #melde die Deletion
-                        i += k  #i wird aktualisiert
+                        deletion_info = f"Deletion an Position {i + 1}: {dna_sequence_1[i]} -> _" #erstellung beschreibung Mutation
+                        #überprüfe, ob die Mutation pathogen ist
+                        if pathogen_mutations.get(i + 1) == ("Deletion", dna_sequence_1[i], "_"): #sucht im pathogen_mutations-Dictionary nach einer Eintragung für die Position i + 1.
+                            deletion_info += " (pathogen)" #falls markiert wird dann deletion_info anhängen
+                        differences.append(deletion_info) #ergänzte Deletion-Beschreibung wird der Liste differences hinzugefügt, die alle gefundenen Unterschiede speichert.
+                        i += k
                     if mismatch_count_j[k] == 0:
-                        #verschiebe j um k, wenn j verschoben werden kann
                         j += k
                     break
             else:
-                #wenn keine 0 in den mismatch_counts gefunden wurden, es könnte eine Substitution sein
-                differences.append(f"Substitution an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[j]}")
+                substitution_info = f"Substitution an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[j]}"
+                #überprüfe, ob die Mutation pathogen ist
+                if pathogen_mutations.get(i + 1) == ("Substitution", dna_sequence_1[i], dna_sequence_2[j]): #pathogen_mutations.get(i + 1) gibt an, ob für die Position i + 1 eine pathogene Substitution definiert ist.
+                    substitution_info += " (pathogen)" #wenn in Dictionary dann substitution_info anfügen
+                differences.append(substitution_info)
                 i += 1
                 j += 1
         else:
