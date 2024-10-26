@@ -26,7 +26,12 @@ def count_nucleotides(dna_sequence_1):
     return g_seq, t_seq, a_seq, c_seq, total_nucleotides
 
 def compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, start_index_1, start_index_2, part_length):
-    #diese Funktion vergleicht gleich (part_length) lange Teile von 2 Sequenzen, angefagen von den jeweils angegeben start_index_1 bzw. start_index_2. Zurückgegeben wird die Anzahl Unterschiede.
+   
+    """
+    diese Funktion vergleicht gleich (part_length) lange Teile von 2 Sequenzen, 
+    angefagen von den jeweils angegeben start_index_1 bzw. start_index_2. Zurückgegeben wird die Anzahl Unterschiede.
+    """
+
     mismatch_count = 0
     for k in range(part_length):
         if start_index_1 + k < len(dna_sequence_1) and start_index_2 + k < len(dna_sequence_2):
@@ -35,7 +40,9 @@ def compare_dna_sequence_parts(dna_sequence_1, dna_sequence_2, start_index_1, st
     return mismatch_count
 
 def compare_next_nucleotides(dna_sequence_1, dna_sequence_2, i, j):
-    #vergleicht die nächsten nukleotide ab position i in der ersten sequenz mit den nächsten nukleotide von j
+    """
+    vergleicht die nächsten nukleotide ab position i in der ersten sequenz mit den nächsten nukleotide von j 
+    """
 
        #berechne die Endindizes für den Vergleich
     end_index_1 = i + 20
