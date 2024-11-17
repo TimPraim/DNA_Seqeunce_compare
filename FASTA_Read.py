@@ -1,5 +1,9 @@
 import sys
 from Bio import SeqIO
+import pandas as pd
+#Pandas is a Python library. Pandas is used to analyze data. (W3Schools)
+#Pandas wird verwendet um nicht mit Listen zu arbeiten sondern mit Tabellen.
+
 fasta_file1 = "BRCA1 normal.fna" #Pfad zur FASTA Datei
 fasta_file2 = "BRCA1 mutation simulation.fna"
 
@@ -64,22 +68,30 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
             for k in range(6):
                 if mismatch_count_i[k] == 0 or mismatch_count_j[k] == 0:
                     if mismatch_count_i[k] == 0:
-                        deletion_info = f"Deletion an Position {i + 1}: {dna_sequence_1[i]} -> _" #erstellung beschreibung Mutation
-                        #sucht im pathogen_mutations-Dictionary nach einer Eintragung für die Position i + 1.
-                        if pathogen_mutations.get(i + 1) == ("Deletion", dna_sequence_1[i], "_"): 
-                            deletion_info += " (pathogen)" #falls markiert wird dann deletion_info anhängen
-                        #ergänzte Deletion-Beschreibung wird der Liste differences hinzugefügt, die alle gefundenen Unterschiede speichert.
-                        differences.append(deletion_info) 
+                        #füge einen Eintrag in differnces Liste hinzu, der Deletion beschreibt
+                        differences.append({
+                            "Art": "Deletion", #Mutationstyp
+                            "Position": i + 1, #Position der Mutation
+                            "Original": dna_sequence_1[i], #Position ohne Mutation
+                            "Mutation": "_", #Deletion ist _
+                            "Betroffene Nukleotide": k, #wie viele Nukleotide betroffen sind
+                            "Auswirkung": "pathogen" if pathogen_mutations.get(i + 1) == ("Deletion", dna_sequence_1[i], "_") else "" #schaut ob diese Mutation als pathgen definiert ist in pathogen Dictionary
+                        })
                         i += k
                     if mismatch_count_j[k] == 0:
                         j += k
                     break
             else:
-                substitution_info = f"Substitution an Position {i + 1}: {dna_sequence_1[i]} -> {dna_sequence_2[j]}"
-                #pathogen_mutations.get(i + 1) gibt an, ob für die Position i + 1 eine pathogene Substitution definiert ist.
-                if pathogen_mutations.get(i + 1) == ("Substitution", dna_sequence_1[i], dna_sequence_2[j]): 
-                    substitution_info += " (pathogen)" #wenn in Dictionary dann substitution_info anfügen
-                differences.append(substitution_info)
+                differences.append({
+                    #füge Eintrag in differences Liste hinzu, der Substitution beschreibt
+                    #gleiches vorgehen wie bei Deletion
+                    "Art": "Substitution",
+                    "Position": i + 1,
+                    "Original": dna_sequence_1[i],
+                    "Mutation": dna_sequence_2[j],
+                    "Betroffene Nukleotide": 1,
+                    "Auswirkung": "pathogen" if pathogen_mutations.get(i + 1) == ("Substitution", dna_sequence_1[i], dna_sequence_2[j]) else "" #schaut ob diese Mutation als pathgen definiert ist in pathogen Dictionary
+                })
                 i += 1
                 j += 1
         else:
@@ -87,15 +99,20 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
             i += 1
             j += 1
 
-    #überprüfen, ob noch Unterschiede in der Referenzsequenz vorhanden sind
     while i < len(dna_sequence_1):
-        differences.append(f"Zusaetzliche Base in der Referenzsequenz an Position {i + 1}: {dna_sequence_1[i]} fehlt in der mutierten Sequenz.")
+        #wenn Wildtyp länger ist dann sind am ende noch Mutationen die hier berücksichtigt werden
+        #nur notwendig wenn letztes Nukleotid gelöscht wurde
+        differences.append({
+            "Art": "Deletion",
+            "Position": i + 1,
+            "Original": dna_sequence_1[i],
+            "Mutation": "_",
+            "Betroffene Nukleotide": 1, 
+            "Auswirkung": "" #keine spezifischen pathogenen Mutationen definiert
+        })
         i += 1
 
-    if differences:
-        return "\n".join(differences)
-    else:
-        return "Keine Unterschiede gefunden."
+    return differences
     
 
 sequences_1 = []
@@ -141,7 +158,8 @@ with open(fasta_file2, "r") as file:
         print(f"Total: {total_nucleotides} ")
         print("----------")
 
-# Vergleiche die beiden Sequenzen
-result = compare_dna_sequences(sequences_1[0], sequences_2[0])
-print(result)
-#.
+differences = compare_dna_sequences(sequences_1[0], sequences_2[0])
+df = pd.DataFrame(differences) #erstellt eine Tabelle aus Liste von Dictionaries differnces
+
+# gibt Tabelle formartiert aus, Spalten sind linksbündig, Index wird weggelassen
+print(df.to_string(index=False, justify='left'))
