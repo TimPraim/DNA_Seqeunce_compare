@@ -161,5 +161,5 @@ with open(fasta_file2, "r") as file:
 differences = compare_dna_sequences(sequences_1[0], sequences_2[0])
 df = pd.DataFrame(differences) #erstellt eine Tabelle aus Liste von Dictionaries differnces
 
-# gibt Tabelle formartiert aus, Spalten sind linksbündig, Index wird weggelassen
+#gibt Tabelle formartiert aus, Spalten sind linksbündig, Index wird weggelassen
 print(df.to_string(index=False, justify='left'))
