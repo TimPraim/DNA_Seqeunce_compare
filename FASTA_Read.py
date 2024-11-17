@@ -144,3 +144,4 @@ with open(fasta_file2, "r") as file:
 # Vergleiche die beiden Sequenzen
 result = compare_dna_sequences(sequences_1[0], sequences_2[0])
 print(result)
+#.
