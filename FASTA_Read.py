@@ -69,11 +69,12 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
                 if mismatch_count_i[k] == 0 or mismatch_count_j[k] == 0:
                     if mismatch_count_i[k] == 0:
                         #füge einen Eintrag in differnces Liste hinzu, der Deletion beschreibt
+                        position_range = f"{i + 1}" if k == 1 else f"{i + 1} - {i + k}"
                         differences.append({
                             "Art": "Deletion", #Mutationstyp
-                            "Position": i + 1, #Position der Mutation
-                            "Original": dna_sequence_1[i], #Position ohne Mutation
-                            "Mutation": "_", #Deletion ist _
+                            "Position": position_range, #Position der Mutation
+                            "Original": "".join(dna_sequence_1[i:i + k]), #Position*en ohne Mutation
+                            "Mutation": "_".join(["_"] * k), #Deletion ist _
                             "Betroffene Nukleotide": k, #wie viele Nukleotide betroffen sind
                             "Auswirkung": "pathogen" if pathogen_mutations.get(i + 1) == ("Deletion", dna_sequence_1[i], "_") else "" #schaut ob diese Mutation als pathgen definiert ist in pathogen Dictionary
                         })
