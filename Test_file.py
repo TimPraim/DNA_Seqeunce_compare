@@ -2,8 +2,8 @@
 #Definieren der Nukleotide
 #snakify
 #from colorama import Fore, Back, Style, init
-from msilib import sequence
-from Bio import SeqIO
+# from msilib import sequence
+# from Bio import SeqIO
 import sys
 
 
@@ -51,7 +51,7 @@ def read_dna_file1(file_path):
         sequence = f.read().strip()
     return sequence
 #öffnet die erste Datei und liest sie, lässt dabei Leerzeichen weg.
-def read_dna_file2(file_path):    
+def read_dna_file2(file_path):
     with open ("sequence2.txt", "r") as f:
         sequence = f.read().strip()
     return sequence
@@ -74,11 +74,11 @@ g_seq_2, t_seq_2, a_seq_2, c_seq_2 = count_nucleotides(dna_sequence_2)
 if dna_sequence_1 == dna_sequence_2:
     print("Keine Mutation")
 else:
-    print("Mutation vorhanden") 
+    print("Mutation vorhanden")
     #print(Fore.RED + 'Mutation vorhanden'  + Style.RESET_ALL)
 
 def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
-     
+
     #start einer liste
     differences = []
 
@@ -91,7 +91,7 @@ def compare_dna_sequences(dna_sequence_1, dna_sequence_2):
         return f"Es gibt {len(differences)} Unterschiede:\n" + "\n".join([f"Position {pos}: {nuc1} -> {nuc2}" for pos, nuc1, nuc2 in differences])
     else:
         return "DNA Sequenzen sind identisch."
-        
+
 result = compare_dna_sequences(dna_sequence_1, dna_sequence_2)
 
 
